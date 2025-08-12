@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}JKR Modules Galore{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', Arial, sans-serif; }
+        .nav-link:hover { color: #3b82f6; }
+        .fade-in { animation: fadeIn 1s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-900">
+    <nav class="bg-gray-800 text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="{% url 'home' %}" class="text-2xl font-bold text-blue-400">JKR Modules Galore</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="{% url 'home' %}" class="nav-link text-gray-300 hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium">Home</a>
+                    <a href="{% url 'chatbot' %}" class="nav-link text-gray-300 hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium">Chatbot</a>
+                    <a href="{% url 'assistant' %}" class="nav-link text-gray-300 hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium">Voice Assistant</a>
+                    <a href="{% url 'tracker_page' %}" class="nav-link text-gray-300 hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium">Eye Tracker</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="min-h-screen py-12">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer class="bg-gray-800 text-white py-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <p>&copy; Jiten Koyee Rai Creations. All rights reserved!</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

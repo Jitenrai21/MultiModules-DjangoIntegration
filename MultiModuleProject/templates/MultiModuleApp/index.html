@@ -1,0 +1,32 @@
+{% extends 'MultiModuleApp/base.html' %}
+{% load static %}
+{% block title %}Home - Jiten Rai{% endblock %}
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Hero Section -->
+    <section class="text-center py-16 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg shadow-lg fade-in">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">Welcome to My Modules Galore!</h1>
+        <p class="text-lg md:text-xl mb-6">I am a learner, grinder, student, and footballer for fun!</p>
+    </section>
+
+    <!-- Modules Section -->
+    <section class="py-12">
+        <h2 class="text-3xl font-bold text-center mb-8">Explore My Projects</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <a href="{% url 'chatbot' %}" class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition fade-in">
+                <h3 class="text-xl font-semibold mb-2">Gemini Chatbot</h3>
+                <p class="text-gray-600">Chat with historical figures like Isaac Newton or Marie Curie using AI.</p>
+            </a>
+            <a href="{% url 'assistant' %}" class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition fade-in">
+                <h3 class="text-xl font-semibold mb-2">Voice Assistant</h3>
+                <p class="text-gray-600">Interact with Jarvis, a voice-activated AI assistant.</p>
+            </a>
+            <a href="{% url 'tracker_page' %}" class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition fade-in">
+                <h3 class="text-xl font-semibold mb-2">Eye Tracker</h3>
+                <p class="text-gray-600">Control your cursor with real-time eye tracking technology.</p>
+            </a>
+        </div>
+    </section>
+
+</div>
+{% endblock %}
