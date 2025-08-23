@@ -1,19 +1,166 @@
 {% extends 'MultiModuleApp/base.html' %}
 {% load static %}
-{% block title %}Voice Assistant - Jiten Rai{% endblock %}
+{% block title %}Voice Assistant - JKR Modules Galore{% endblock %}
 {% block content %}
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 fade-in">
-    <div class="bg-white p-6 rounded-lg shadow-lg max-w-2xl mx-auto text-center">
-        <h1 class="text-3xl font-bold text-gray-800 mb-6">Voice Assistant - Jarvis</h1>
-        <p id="status" class="text-gray-600 mb-4">Press and hold the spacebar to speak to Jarvis</p>
-        <div class="flex justify-center mb-4">
-            <button id="mic-btn" class="p-3 bg-blue-500 text-white rounded-full hover:bg-blue-600" title="Press and hold spacebar to speak">🎙️</button>
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 fade-in">
+    <div class="glass-effect rounded-2xl p-8 shadow-2xl text-center">
+        <!-- Header -->
+        <div class="mb-8">
+            <div class="w-20 h-20 mx-auto mb-6 rounded-2xl flex items-center justify-center shadow-lg" style="background: linear-gradient(to bottom right, #1A2A80, #3B38A0);">
+                <i class="fas fa-microphone text-3xl text-white"></i>
+            </div>
+            <h1 class="text-4xl font-bold text-white mb-4">Voice Assistant</h1>
+            <h2 class="text-2xl mb-2" style="color: #7A85C1;">Meet Jarvis</h2>
+            <p class="text-white/70">Your intelligent voice-powered assistant</p>
         </div>
-        <div id="output" class="border border-gray-200 p-4 rounded-md bg-gray-50 max-h-96 overflow-y-auto"></div>
+
+        <!-- Status Display -->
+        <div class="mb-8">
+            <div class="glass-effect rounded-xl p-6 mb-6">
+                <p id="status" class="text-lg text-white mb-4">Press and hold the spacebar to speak to Jarvis</p>
+                <div class="flex justify-center items-center space-x-4">
+                    <div id="listening-indicator" class="w-4 h-4 rounded-full opacity-50 transition-all duration-300" style="background-color: #7A85C1;"></div>
+                    <span class="text-white/60 text-sm">Ready to listen</span>
+                </div>
+            </div>
+
+            <!-- Voice Activation Button -->
+            <div class="mb-6">
+                <button id="mic-btn" 
+                        class="w-24 h-24 rounded-full shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center group relative overflow-hidden" 
+                        style="background: linear-gradient(to bottom right, #3B38A0, #7A85C1); box-shadow: 0 25px 50px -12px rgba(59, 56, 160, 0.25);">
+                    <div class="absolute inset-0 transform -translate-x-full group-hover:translate-x-full transition-transform duration-1000" style="background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent);"></div>
+                    <i class="fas fa-microphone text-3xl text-white relative z-10"></i>
+                </button>
+                <p class="text-white/60 text-sm mt-3">Click or hold spacebar</p>
+            </div>
+        </div>
+
+        <!-- Instructions -->
+        <div class="glass-effect rounded-xl p-6 mb-8">
+            <h3 class="text-xl font-semibold text-white mb-4">
+                <i class="fas fa-info-circle mr-2"></i>How to Use
+            </h3>
+            <div class="grid md:grid-cols-3 gap-4 text-left">
+                <div class="flex items-start space-x-3">
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background-color: rgba(59, 56, 160, 0.2);">
+                        <i class="fas fa-keyboard text-sm" style="color: #7A85C1;"></i>
+                    </div>
+                    <div>
+                        <p class="text-white font-medium">Spacebar</p>
+                        <p class="text-white/60 text-sm">Press and hold to activate</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-3">
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background-color: rgba(122, 133, 193, 0.2);">
+                        <i class="fas fa-mouse-pointer text-sm" style="color: #B2B0E8;"></i>
+                    </div>
+                    <div>
+                        <p class="text-white font-medium">Click Button</p>
+                        <p class="text-white/60 text-sm">Alternative activation method</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-3">
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style="background-color: rgba(26, 42, 128, 0.2);">
+                        <i class="fas fa-volume-up text-sm" style="color: #3B38A0;"></i>
+                    </div>
+                    <div>
+                        <p class="text-white font-medium">Voice Commands</p>
+                        <p class="text-white/60 text-sm">Speak clearly when indicator is active</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Output Area -->
+        <div class="glass-effect rounded-xl">
+            <div class="p-6">
+                <h3 class="text-xl font-semibold text-white mb-4 text-left">
+                    <i class="fas fa-comments mr-2"></i>Conversation
+                </h3>
+                <div id="output" 
+                     class="bg-white/5 border border-white/20 rounded-xl p-4 max-h-80 overflow-y-auto text-left scrollbar-thin scrollbar-track-transparent scrollbar-thumb-white/20 hover:scrollbar-thumb-white/30">
+                    <div class="flex items-start space-x-3 mb-4">
+                        <div class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0" style="background: linear-gradient(to bottom right, #5E936C, #93DA97);">
+                            <i class="fas fa-robot text-white text-sm"></i>
+                        </div>
+                        <div class="bg-white/10 rounded-2xl px-4 py-3">
+                            <p class="text-white/90 text-sm">Hello! I'm Jarvis, your voice assistant. Press and hold the spacebar or click the microphone button to start talking to me.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Audio Visualization (Optional Enhancement) -->
+        <div class="mt-6 hidden" id="audio-visualizer">
+            <div class="flex justify-center items-end space-x-1 h-12">
+                <div class="w-2 bg-purple-400 rounded-full audio-bar" style="height: 20%;"></div>
+                <div class="w-2 bg-purple-400 rounded-full audio-bar" style="height: 40%;"></div>
+                <div class="w-2 bg-purple-400 rounded-full audio-bar" style="height: 60%;"></div>
+                <div class="w-2 bg-purple-400 rounded-full audio-bar" style="height: 30%;"></div>
+                <div class="w-2 bg-purple-400 rounded-full audio-bar" style="height: 70%;"></div>
+                <div class="w-2 bg-purple-400 rounded-full audio-bar" style="height: 50%;"></div>
+                <div class="w-2 bg-purple-400 rounded-full audio-bar" style="height: 80%;"></div>
+            </div>
+        </div>
     </div>
 </div>
+
 <style>
-    body { overflow-y: auto; } /* Prevent body scrolling issues */
+/* Scrollbar styles */
+#output::-webkit-scrollbar {
+    width: 6px;
+}
+#output::-webkit-scrollbar-track {
+    background: transparent;
+}
+#output::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+}
+#output::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Listening animation */
+.listening #listening-indicator {
+    background-color: #ef4444;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.5;
+        transform: scale(1.1);
+    }
+}
+
+/* Audio visualizer animation */
+.audio-bar {
+    animation: audioWave 1s ease-in-out infinite;
+    background-color: #93DA97;
+}
+.audio-bar:nth-child(2) { animation-delay: 0.1s; }
+.audio-bar:nth-child(3) { animation-delay: 0.2s; }
+.audio-bar:nth-child(4) { animation-delay: 0.3s; }
+.audio-bar:nth-child(5) { animation-delay: 0.4s; }
+.audio-bar:nth-child(6) { animation-delay: 0.5s; }
+.audio-bar:nth-child(7) { animation-delay: 0.6s; }
+
+@keyframes audioWave {
+    0%, 100% { transform: scaleY(1); }
+    50% { transform: scaleY(0.3); }
+}
+
+body { 
+    overflow-y: auto; 
+}
 </style>
-<script src="{% static 'jarvis.js' %}?v=1" defer></script>
+
+<script src="{% static 'jarvis.js' %}?v=2" defer></script>
 {% endblock %}

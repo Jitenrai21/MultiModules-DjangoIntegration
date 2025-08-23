@@ -1,40 +1,150 @@
 {% extends 'MultiModuleApp/base.html' %}
 {% load static %}
-{% block title %}Gemini Chatbot - Jiten Rai{% endblock %}
+{% block title %}Gemini Chatbot - JKR Modules Galore{% endblock %}
 {% block content %}
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 fade-in">
-    <div class="bg-white p-6 rounded-lg shadow-lg max-w-2xl mx-auto">
-        <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Gemini Chatbot</h1>
-        <div class="mb-4">
-            <label for="persona" class="block text-sm font-medium text-gray-700">Select Persona:</label>
-            <select id="persona" class="mt-1 block w-full p-2 border border-gray-300 rounded-md focus:ring-blue-400 focus:border-blue-400">
-                <option value="Isaac Newton">Isaac Newton - Mathematician and physicist</option>
-                <option value="Marie Curie">Marie Curie - Pioneering scientist in radioactivity</option>
-                <option value="William Shakespeare">William Shakespeare - English playwright and poet</option>
-                <option value="Adam Smith">Adam Smith - Father of modern economics</option>
-                <option value="Alan Turing">Alan Turing - Father of computer science</option>
-            </select>
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 fade-in">
+    <div class="glass-effect rounded-2xl p-8 shadow-2xl">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <div class="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center" style="background: linear-gradient(to bottom right, #3B38A0, #7A85C1);">
+                <i class="fas fa-comments text-2xl text-white"></i>
+            </div>
+            <h1 class="text-4xl font-bold text-white mb-2">Gemini Chatbot</h1>
+            <p class="text-white/70">Chat with historical figures powered by Google's Gemini AI</p>
         </div>
-        <div class="mb-4">
-            <label for="enable-speech" class="flex items-center text-sm font-medium text-gray-700">
-                <input type="checkbox" id="enable-speech" class="mr-2 h-4 w-4 text-blue-400 focus:ring-blue-400 border-gray-300 rounded">
-                Enable Text-to-Speech Output
-            </label>
+
+        <!-- Controls -->
+        <div class="grid md:grid-cols-2 gap-6 mb-8">
+            <!-- Persona Selection -->
+            <div>
+                <label for="persona" class="block text-sm font-semibold text-white mb-3">
+                    <i class="fas fa-user-circle mr-2"></i>Select Persona
+                </label>
+                <select id="persona" class="w-full p-3 bg-white/10 border border-white/20 rounded-xl text-white focus:ring-2 focus:border-transparent backdrop-blur-sm">
+                    <option value="Isaac Newton">Isaac Newton - Mathematician and physicist</option>
+                    <option value="Marie Curie">Marie Curie - Pioneering scientist in radioactivity</option>
+                    <option value="William Shakespeare">William Shakespeare - English playwright and poet</option>
+                    <option value="Adam Smith">Adam Smith - Father of modern economics</option>
+                    <option value="Alan Turing">Alan Turing - Father of computer science</option>
+                </select>
+            </div>
+
+            <!-- Speech Settings -->
+            <div>
+                <label class="block text-sm font-semibold text-white mb-3">
+                    <i class="fas fa-volume-up mr-2"></i>Audio Settings
+                </label>
+                <label for="enable-speech" class="flex items-center p-3 bg-white/5 rounded-xl border border-white/20 hover:bg-white/10 transition-colors cursor-pointer">
+                    <input type="checkbox" id="enable-speech" class="mr-3 h-5 w-5 text-blue-500 focus:ring-blue-400 border-white/30 rounded">
+                    <span class="text-white">Enable Text-to-Speech Output</span>
+                </label>
+            </div>
         </div>
-        <div class="chat-container border border-gray-200 p-4 rounded-md bg-gray-50 mb-4 max-h-96 overflow-y-auto">
-            <div id="chat-output"></div>
+
+        <!-- Chat Container -->
+        <div class="bg-white/5 border border-white/20 rounded-2xl mb-6 backdrop-blur-sm">
+            <div class="p-6">
+                <div class="chat-container h-96 overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-white/20 hover:scrollbar-thumb-white/30">
+                    <div id="chat-output" class="space-y-4">
+                        <!-- Chat messages will appear here -->
+                        <div class="flex items-start space-x-3">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center" style="background: linear-gradient(to bottom right, #3B38A0, #7A85C1);">
+                                <i class="fas fa-robot text-white text-sm"></i>
+                            </div>
+                            <div class="bg-white/10 rounded-2xl px-4 py-3 max-w-xs">
+                                <p class="text-white/90 text-sm">Hello! I'm ready to chat. Select a persona above and start the conversation!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="flex space-x-2">
-            <input type="text" id="user-input" class="flex-1 p-2 border border-gray-300 rounded-md focus:ring-blue-400 focus:border-blue-400" placeholder="Type your message...">
-            <button id="send-btn" class="p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Send</button>
-            <button id="mic-btn" class="p-2 bg-gray-500 text-white rounded-md hover:bg-gray-600" title="Use voice input">🎙️</button>
+
+        <!-- Input Area -->
+        <div class="flex flex-col sm:flex-row gap-3">
+            <div class="flex-1 relative">
+                <input type="text" 
+                       id="user-input" 
+                       class="w-full p-4 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:ring-2 focus:border-transparent pr-12 backdrop-blur-sm" 
+                       style="--tw-ring-color: #7A85C1;"
+                       placeholder="Type your message...">
+                <button id="mic-btn" 
+                        class="absolute right-3 top-1/2 transform -translate-y-1/2 p-2 bg-white/10 hover:bg-white/20 rounded-lg transition-colors" 
+                        title="Use voice input">
+                    <i class="fas fa-microphone text-white"></i>
+                </button>
+            </div>
+            <button id="send-btn" 
+                    class="px-6 py-4 text-white rounded-xl transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center min-w-[120px] btn-primary">
+                <i class="fas fa-paper-plane mr-2"></i>Send
+            </button>
         </div>
-        <p id="error-message" class="text-red-500 mt-2 hidden"></p>
-        <p id="voice-status" class="text-gray-600 mt-2 hidden"></p>
-        <p id="speech-support" class="text-gray-600 mt-2 hidden"></p>
+
+        <!-- Status Messages -->
+        <div class="mt-4 space-y-2">
+            <p id="error-message" class="text-red-400 text-sm hidden flex items-center">
+                <i class="fas fa-exclamation-circle mr-2"></i>
+                <span></span>
+            </p>
+            <p id="voice-status" class="text-blue-300 text-sm hidden flex items-center">
+                <i class="fas fa-microphone-alt mr-2 animate-pulse"></i>
+                <span></span>
+            </p>
+            <p id="speech-support" class="text-yellow-300 text-sm hidden flex items-center">
+                <i class="fas fa-info-circle mr-2"></i>
+                <span></span>
+            </p>
+        </div>
+
+        <!-- Typing indicator -->
+        <div id="typing-indicator" class="hidden mt-4">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                    <i class="fas fa-robot text-white text-sm"></i>
+                </div>
+                <div class="bg-white/10 rounded-2xl px-4 py-3">
+                    <div class="flex space-x-1">
+                        <div class="w-2 h-2 bg-white/60 rounded-full animate-bounce"></div>
+                        <div class="w-2 h-2 bg-white/60 rounded-full animate-bounce" style="animation-delay: 0.1s;"></div>
+                        <div class="w-2 h-2 bg-white/60 rounded-full animate-bounce" style="animation-delay: 0.2s;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-<script src="{% static 'chat.js' %}?v=1" defer></script>
+
+<style>
+.scrollbar-thin {
+    scrollbar-width: thin;
+}
+.scrollbar-track-transparent {
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+/* Webkit scrollbar styles */
+.chat-container::-webkit-scrollbar {
+    width: 6px;
+}
+.chat-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+.chat-container::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+}
+.chat-container::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Custom option styling */
+#persona option {
+    background-color: #1f2937;
+    color: white;
+}
+</style>
+
+<script src="{% static 'chat-enhanced.js' %}?v=3" defer></script>
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         console.log("DOM loaded, initializing chatAPI");
@@ -42,8 +152,10 @@
             window.chatAPI.init();
         } else {
             console.error("chatAPI not available");
-            document.getElementById("error-message").textContent = "Failed to load chat functionality. Please refresh the page.";
-            document.getElementById("error-message").classList.remove("hidden");
+            const errorMsg = document.getElementById("error-message");
+            const errorSpan = errorMsg.querySelector('span');
+            errorSpan.textContent = "Failed to load chat functionality. Please refresh the page.";
+            errorMsg.classList.remove("hidden");
         }
     });
 </script>

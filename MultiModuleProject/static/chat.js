@@ -7,6 +7,12 @@ window.chatAPI = {
         const sessionId = this.generateUUID();
         console.log("Session ID:", sessionId);
 
+        // Clear initial message
+        const chatOutput = document.getElementById("chat-output");
+        if (chatOutput) {
+            chatOutput.innerHTML = this.createWelcomeMessage();
+        }
+
         // Check SpeechRecognition support
         const recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         let isListening = false;
@@ -17,12 +23,9 @@ window.chatAPI = {
             if (micBtn) {
                 micBtn.disabled = true;
                 micBtn.title = "Voice input not supported in this browser";
+                micBtn.classList.add("opacity-50", "cursor-not-allowed");
             }
-            const voiceStatus = document.getElementById("voice-status");
-            if (voiceStatus) {
-                voiceStatus.textContent = "Voice input is not supported in this browser.";
-                voiceStatus.classList.remove("hidden");
-            }
+            this.showStatus("Voice input is not supported in this browser.", "warning");
         } else {
             const recognizer = new recognition();
             recognizer.interimResults = true;
@@ -35,19 +38,52 @@ window.chatAPI = {
                     .join('');
                 const userInput = document.getElementById("user-input");
                 if (userInput) userInput.value = transcript;
-                const voiceStatus = document.getElementById("voice-status");
-                if (voiceStatus) voiceStatus.textContent = "Listening... (Speak clearly)";
+                this.showStatus("Listening... (Speak clearly)", "info");
             };
 
             recognizer.onend = () => {
                 console.log("SpeechRecognition ended");
                 isListening = false;
                 const micBtn = document.getElementById("mic-btn");
-                if (micBtn) micBtn.classList.remove("listening");
-                const voiceStatus = document.getElementById("voice-status");
-                if (voiceStatus) voiceStatus.classList.add("hidden");
+                if (micBtn) {
+                    micBtn.classList.remove("listening");
+                    micBtn.innerHTML = '<i class="fas fa-microphone text-white"></i>';
+                }
+                this.hideStatus();
                 const userInput = document.getElementById("user-input");
                 if (userInput && userInput.value.trim()) {
+                    this.sendMessage(sessionId, userInput.value.trim());
+                }
+            };
+
+            recognizer.onerror = (event) => {
+                console.log("SpeechRecognition error:", event.error);
+                isListening = false;
+                const micBtn = document.getElementById("mic-btn");
+                if (micBtn) {
+                    micBtn.classList.remove("listening");
+                    micBtn.innerHTML = '<i class="fas fa-microphone text-white"></i>';
+                }
+                this.hideStatus();
+                this.showStatus(`Voice input error: ${event.error}`, "error");
+            };
+
+            const micBtn = document.getElementById("mic-btn");
+            if (micBtn) {
+                micBtn.addEventListener("click", () => {
+                    console.log("Mic button clicked");
+                    if (!isListening) {
+                        isListening = true;
+                        micBtn.classList.add("listening");
+                        micBtn.innerHTML = '<i class="fas fa-microphone-alt text-white animate-pulse"></i>';
+                        this.showStatus("Listening... (Speak clearly)", "info");
+                        recognizer.start();
+                    }
+                });
+            } else {
+                console.error("Mic button not found");
+            }
+        }
                     this.sendMessage(sessionId, userInput.value.trim());
                 }
             };

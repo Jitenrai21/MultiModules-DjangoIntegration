@@ -6,43 +6,195 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}JKR Modules Galore{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="{% static 'css/enhanced-ui.css' %}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', Arial, sans-serif; }
-        .nav-link:hover { color: #3b82f6; }
-        .fade-in { animation: fadeIn 1s ease-in; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        :root {
+            --primary-dark: #1A2A80;
+            --primary-medium: #3B38A0;
+            --primary-light: #7A85C1;
+            --primary-lightest: #B2B0E8;
+        }
+        body { 
+            font-family: 'Inter', Arial, sans-serif; 
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+        .glass-effect {
+            background: rgba(178, 176, 232, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(178, 176, 232, 0.2);
+        }
+        .nav-link { 
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-light), var(--primary-lightest));
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        .fade-in { 
+            animation: fadeIn 1s ease-in forwards;
+            opacity: 0;
+        }
+        .slide-up {
+            animation: slideUp 0.6s ease-out forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(20px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(26, 42, 128, 0.2), 0 10px 10px -5px rgba(26, 42, 128, 0.1);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-lightest) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-medium) 0%, var(--primary-light) 100%);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+            box-shadow: 0 8px 25px rgba(26, 42, 128, 0.4);
+        }
+        .btn-secondary {
+            background: rgba(178, 176, 232, 0.1);
+            border: 2px solid rgba(178, 176, 232, 0.3);
+        }
+        .btn-secondary:hover {
+            background: rgba(178, 176, 232, 0.2);
+            border-color: rgba(178, 176, 232, 0.5);
+        }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-900">
-    <nav class="bg-gray-800 text-white shadow-md sticky top-0 z-50">
+<body class="text-gray-900 min-h-screen">
+    <!-- Navigation -->
+    <nav class="glass-effect sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
                 <div class="flex items-center">
-                    <a href="{% url 'home' %}" class="text-2xl font-bold text-blue-400">JKR Modules Galore</a>
+                    <div class="flex-shrink-0 flex items-center">
+                        <i class="fas fa-cube text-2xl text-white mr-2"></i>
+                        <a href="{% url 'home' %}" class="text-2xl font-bold text-white gradient-text hover:text-white transition-colors">
+                            JKR Modules Galore
+                        </a>
+                    </div>
                 </div>
-                <div class="flex items-center space-x-4">
-                    <a href="{% url 'home' %}" class="nav-link text-gray-300 hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium">Home</a>
-                    <a href="{% url 'chatbot' %}" class="nav-link text-gray-300 hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium">Chatbot</a>
-                    <a href="{% url 'assistant' %}" class="nav-link text-gray-300 hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium">Voice Assistant</a>
-                    <a href="{% url 'tracker_page' %}" class="nav-link text-gray-300 hover:text-blue-400 px-3 py-2 rounded-md text-sm font-medium">Eye Tracker</a>
+                <div class="hidden md:flex items-center space-x-1">
+                    <a href="{% url 'home' %}" class="nav-link text-white/80 hover:text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center transition-colors">
+                        <i class="fas fa-home mr-2"></i>Home
+                    </a>
+                    <a href="{% url 'chatbot' %}" class="nav-link text-white/80 hover:text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center transition-colors">
+                        <i class="fas fa-comments mr-2"></i>Chatbot
+                    </a>
+                    <a href="{% url 'assistant' %}" class="nav-link text-white/80 hover:text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center transition-colors">
+                        <i class="fas fa-microphone mr-2"></i>Voice Assistant
+                    </a>
+                    <a href="{% url 'tracker_page' %}" class="nav-link text-white/80 hover:text-white px-4 py-2 rounded-lg text-sm font-medium flex items-center transition-colors">
+                        <i class="fas fa-eye mr-2"></i>Eye Tracker
+                    </a>
                 </div>
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-button" class="text-white hover:text-gray-300 focus:outline-none focus:text-gray-300">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="md:hidden hidden glass-effect">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="{% url 'home' %}" class="block text-white/80 hover:text-white px-3 py-2 rounded-md text-base font-medium">
+                    <i class="fas fa-home mr-2"></i>Home
+                </a>
+                <a href="{% url 'chatbot' %}" class="block text-white/80 hover:text-white px-3 py-2 rounded-md text-base font-medium">
+                    <i class="fas fa-comments mr-2"></i>Chatbot
+                </a>
+                <a href="{% url 'assistant' %}" class="block text-white/80 hover:text-white px-3 py-2 rounded-md text-base font-medium">
+                    <i class="fas fa-microphone mr-2"></i>Voice Assistant
+                </a>
+                <a href="{% url 'tracker_page' %}" class="block text-white/80 hover:text-white px-3 py-2 rounded-md text-base font-medium">
+                    <i class="fas fa-eye mr-2"></i>Eye Tracker
+                </a>
             </div>
         </div>
     </nav>
 
-    <main class="min-h-screen py-12">
+    <!-- Main Content -->
+    <main class="min-h-screen py-8">
         {% block content %}
         {% endblock %}
     </main>
 
-    <footer class="bg-gray-800 text-white py-6">
+    <!-- Footer -->
+    <footer class="glass-effect text-white py-8 mt-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row justify-between items-center">
                 <div class="mb-4 md:mb-0">
-                    <p>&copy; Jiten Koyee Rai Creations. All rights reserved!</p>
+                    <div class="flex items-center mb-2">
+                        <i class="fas fa-cube text-xl mr-2"></i>
+                        <span class="text-xl font-bold">JKR Modules Galore</span>
+                    </div>
+                    <p class="text-white/80">&copy; 2025 Jiten Koyee Rai Creations. All rights reserved!</p>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="https://github.com/Jitenrai21" class="text-white/80 hover:text-white transition-colors">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/jiten-rai-42b540264/" class="text-white/80 hover:text-white transition-colors">
+                        <i class="fab fa-linkedin text-xl"></i>
+                    </a>
                 </div>
             </div>
         </div>
     </footer>
+
+    <!-- Mobile menu toggle script -->
+    <script>
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Add staggered animation delays
+        document.addEventListener('DOMContentLoaded', function() {
+            const fadeElements = document.querySelectorAll('.fade-in');
+            fadeElements.forEach((el, index) => {
+                el.style.animationDelay = `${index * 0.1}s`;
+            });
+
+            const slideElements = document.querySelectorAll('.slide-up');
+            slideElements.forEach((el, index) => {
+                el.style.animationDelay = `${index * 0.15}s`;
+            });
+        });
+    </script>
 </body>
 </html>

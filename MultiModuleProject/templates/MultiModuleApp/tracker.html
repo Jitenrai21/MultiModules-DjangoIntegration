@@ -1,88 +1,222 @@
+{% extends 'MultiModuleApp/base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Eye Tracking App</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(to right, #f4f7f8, #dde7ec);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
-        .container {
-            background-color: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-            padding: 40px;
-            text-align: center;
-            max-width: 720px;
-            width: 100%;
-        }
-
-        h1 {
-            color: #333;
-            margin-bottom: 20px;
-        }
-
-        video {
-            width: 640px;
-            height: 480px;
-            border-radius: 8px;
-            border: 2px solid #ddd;
-            margin-top: 20px;
-        }
-
-        .controls {
-            margin-top: 20px;
-        }
-
-        button {
-            margin: 0 10px;
-            padding: 12px 24px;
-            font-size: 16px;
-            border: none;
-            border-radius: 6px;
-            background-color: #4CAF50;
-            color: white;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
-
-        button:hover {
-            background-color: #45a049;
-            transform: scale(1.05);
-        }
-
-        #stopBtn {
-            background-color: #f44336;
-        }
-
-        #stopBtn:hover {
-            background-color: #d32f2f;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Real-Time Eye Tracking</h1>
-        <div class="controls">
-            <button id="startBtn">Start Tracking</button>
-            <button id="stopBtn">Stop Tracking</button>
+{% block title %}Eye Tracker - JKR Modules Galore{% endblock %}
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 fade-in">
+    <div class="glass-effect rounded-2xl p-8 shadow-2xl">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <div class="w-20 h-20 mx-auto mb-6 rounded-2xl flex items-center justify-center shadow-lg" style="background: linear-gradient(to bottom right, #7A85C1, #B2B0E8);">
+                <i class="fas fa-eye text-3xl" style="color: #1A2A80;"></i>
+            </div>
+            <h1 class="text-4xl font-bold text-white mb-4">Real-Time Eye Tracking</h1>
+            <p class="text-white/70 text-lg max-w-2xl mx-auto">
+                Experience the future of human-computer interaction. Control your cursor with your eyes using advanced computer vision technology.
+            </p>
         </div>
-        <video id="video" autoplay muted></video>
-    </div>
 
-    <script src="{% static 'main.js' %}"></script>
-</body>
-</html>
+        <!-- Instructions -->
+        <div class="grid md:grid-cols-3 gap-6 mb-8">
+            <div class="glass-effect rounded-xl p-6 text-center">
+                <div class="w-12 h-12 mx-auto mb-4 rounded-lg flex items-center justify-center" style="background-color: rgba(59, 56, 160, 0.2);">
+                    <i class="fas fa-play text-xl" style="color: #7A85C1;"></i>
+                </div>
+                <h3 class="text-white font-semibold mb-2">Start Tracking</h3>
+                <p class="text-white/60 text-sm">Click the start button to begin eye tracking</p>
+            </div>
+            <div class="glass-effect rounded-xl p-6 text-center">
+                <div class="w-12 h-12 mx-auto mb-4 rounded-lg flex items-center justify-center" style="background-color: rgba(122, 133, 193, 0.2);">
+                    <i class="fas fa-mouse-pointer text-xl" style="color: #B2B0E8;"></i>
+                </div>
+                <h3 class="text-white font-semibold mb-2">Move Cursor</h3>
+                <p class="text-white/60 text-sm">Look around to control the mouse cursor</p>
+            </div>
+            <div class="glass-effect rounded-xl p-6 text-center">
+                <div class="w-12 h-12 mx-auto mb-4 rounded-lg flex items-center justify-center" style="background-color: rgba(178, 176, 232, 0.2);">
+                    <i class="fas fa-eye-slash text-xl" style="color: #3B38A0;"></i>
+                </div>
+                <h3 class="text-white font-semibold mb-2">Wink to Click</h3>
+                <p class="text-white/60 text-sm">Wink to perform mouse clicks</p>
+            </div>
+        </div>
+
+        <!-- Status Indicator -->
+        <div class="glass-effect rounded-xl p-4 mb-8">
+            <div class="flex items-center justify-center space-x-4">
+                <div id="status-indicator" class="w-4 h-4 bg-red-500 rounded-full opacity-60 transition-all duration-300"></div>
+                <span id="status-text" class="text-white font-medium">Ready to start tracking</span>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="flex justify-center space-x-4 mb-8">
+            <button id="startBtn" 
+                    class="px-8 py-4 text-white font-semibold rounded-xl transform hover:scale-105 transition-all duration-300 shadow-lg flex items-center btn-primary">
+                <i class="fas fa-play mr-3"></i>Start Tracking
+            </button>
+            <button id="stopBtn" 
+                    class="px-8 py-4 text-white font-semibold rounded-xl transform hover:scale-105 transition-all duration-300 shadow-lg flex items-center" 
+                    style="background: linear-gradient(135deg, #dc2626, #ef4444); box-shadow: 0 4px 15px rgba(220, 38, 38, 0.3);">
+                <i class="fas fa-stop mr-3"></i>Stop Tracking
+            </button>
+        </div>
+
+        <!-- Video Container -->
+        <div class="glass-effect rounded-2xl p-6">
+            <div class="relative">
+                <video id="video" 
+                       autoplay 
+                       muted 
+                       class="w-full max-w-4xl mx-auto rounded-xl border-2 border-white/20 shadow-2xl bg-black/20"
+                       style="aspect-ratio: 4/3;">
+                </video>
+                
+                <!-- Overlay indicators -->
+                <div class="absolute top-4 left-4 glass-effect rounded-lg px-3 py-2">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-2 h-2 rounded-full animate-pulse" style="background-color: #7A85C1;"></div>
+                        <span class="text-white text-sm font-medium">Live Feed</span>
+                    </div>
+                </div>
+                
+                <!-- Performance stats -->
+                <div class="absolute top-4 right-4 glass-effect rounded-lg px-3 py-2">
+                    <div class="text-white text-sm">
+                        <div>FPS: <span id="fps-counter">0</span></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Video placeholder when not active -->
+            <div id="video-placeholder" class="absolute inset-6 bg-black/40 rounded-xl flex items-center justify-center">
+                <div class="text-center">
+                    <i class="fas fa-video text-6xl text-white/40 mb-4"></i>
+                    <p class="text-white/60 text-lg">Click "Start Tracking" to begin</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technical Info -->
+        <div class="mt-8 glass-effect rounded-xl p-6">
+            <h3 class="text-xl font-semibold text-white mb-4">
+                <i class="fas fa-info-circle mr-2"></i>How It Works
+            </h3>
+            <div class="grid md:grid-cols-2 gap-6 text-white/70">
+                <div>
+                    <h4 class="text-white font-medium mb-2">Computer Vision</h4>
+                    <p class="text-sm">Uses OpenCV and facial landmark detection to track eye movements in real-time</p>
+                </div>
+                <div>
+                    <h4 class="text-white font-medium mb-2">Gaze Estimation</h4>
+                    <p class="text-sm">Advanced algorithms estimate gaze direction and map it to screen coordinates</p>
+                </div>
+                <div>
+                    <h4 class="text-white font-medium mb-2">Real-time Processing</h4>
+                    <p class="text-sm">Processes video frames at high speed for smooth cursor control</p>
+                </div>
+                <div>
+                    <h4 class="text-white font-medium mb-2">Privacy First</h4>
+                    <p class="text-sm">All processing happens locally in your browser - no data is sent to servers</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Custom styles for video and tracking states */
+.tracking #status-indicator {
+    background-color: #7A85C1;
+    animation: pulse 2s infinite;
+}
+
+.error #status-indicator {
+    background-color: #ef4444;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.6;
+        transform: scale(1.1);
+    }
+}
+
+#video {
+    transition: all 0.3s ease;
+}
+
+#video.tracking {
+    border-color: rgba(147, 218, 151, 0.5);
+    box-shadow: 0 0 20px rgba(147, 218, 151, 0.3);
+}
+
+#video-placeholder {
+    transition: opacity 0.3s ease;
+}
+
+#video-placeholder.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+</style>
+
+<script src="{% static 'main.js' %}?v=2"></script>
+<script>
+// Enhanced status updates
+document.addEventListener('DOMContentLoaded', function() {
+    const statusIndicator = document.getElementById('status-indicator');
+    const statusText = document.getElementById('status-text');
+    const videoPlaceholder = document.getElementById('video-placeholder');
+    const video = document.getElementById('video');
+    const startBtn = document.getElementById('startBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    
+    // Update status display
+    function updateStatus(status, message) {
+        statusText.textContent = message;
+        document.body.className = status;
+        
+        if (status === 'tracking') {
+            videoPlaceholder.classList.add('hidden');
+            video.classList.add('tracking');
+        } else {
+            videoPlaceholder.classList.remove('hidden');
+            video.classList.remove('tracking');
+        }
+    }
+    
+    // FPS counter (basic implementation)
+    let frameCount = 0;
+    let lastTime = Date.now();
+    
+    function updateFPS() {
+        frameCount++;
+        const now = Date.now();
+        if (now - lastTime >= 1000) {
+            document.getElementById('fps-counter').textContent = frameCount;
+            frameCount = 0;
+            lastTime = now;
+        }
+        requestAnimationFrame(updateFPS);
+    }
+    updateFPS();
+    
+    // Button states
+    startBtn.addEventListener('click', function() {
+        updateStatus('tracking', 'Eye tracking active - Look around to move cursor');
+        startBtn.disabled = true;
+        stopBtn.disabled = false;
+    });
+    
+    stopBtn.addEventListener('click', function() {
+        updateStatus('', 'Ready to start tracking');
+        startBtn.disabled = false;
+        stopBtn.disabled = true;
+    });
+});
+</script>
+{% endblock %}

@@ -1,32 +1,145 @@
 {% extends 'MultiModuleApp/base.html' %}
 {% load static %}
-{% block title %}Home - Jiten Rai{% endblock %}
+{% block title %}Home - JKR Modules Galore{% endblock %}
 {% block content %}
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <!-- Hero Section -->
-    <section class="text-center py-16 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg shadow-lg fade-in">
-        <h1 class="text-4xl md:text-5xl font-bold mb-4">Welcome to My Modules Galore!</h1>
-        <p class="text-lg md:text-xl mb-6">I am a learner, grinder, student, and footballer for fun!</p>
-    </section>
-
-    <!-- Modules Section -->
-    <section class="py-12">
-        <h2 class="text-3xl font-bold text-center mb-8">Explore My Projects</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <a href="{% url 'chatbot' %}" class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition fade-in">
-                <h3 class="text-xl font-semibold mb-2">Gemini Chatbot</h3>
-                <p class="text-gray-600">Chat with historical figures like Isaac Newton or Marie Curie using AI.</p>
-            </a>
-            <a href="{% url 'assistant' %}" class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition fade-in">
-                <h3 class="text-xl font-semibold mb-2">Voice Assistant</h3>
-                <p class="text-gray-600">Interact with Jarvis, a voice-activated AI assistant.</p>
-            </a>
-            <a href="{% url 'tracker_page' %}" class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition fade-in">
-                <h3 class="text-xl font-semibold mb-2">Eye Tracker</h3>
-                <p class="text-gray-600">Control your cursor with real-time eye tracking technology.</p>
-            </a>
+    <section class="text-center py-20 fade-in">
+        <div class="glass-effect rounded-2xl p-12 mb-16">
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 text-white leading-tight">
+                Welcome to My
+                <span class="block text-transparent bg-clip-text" style="background: linear-gradient(135deg, #7A85C1 0%, #B2B0E8 100%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                    Modules Galore!
+                </span>
+            </h1>
+            <p class="text-xl md:text-2xl mb-8 text-white/80 max-w-3xl mx-auto leading-relaxed">
+                I am a passionate learner, dedicated grinder, curious student, and footballer for fun! 
+                Explore my AI-powered applications and innovative projects.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="{% url 'chatbot' %}" class="px-8 py-4 text-white font-semibold rounded-xl transform hover:scale-105 transition-all duration-300 shadow-lg btn-primary">
+                    <i class="fas fa-rocket mr-2"></i>Get Started
+                </a>
+                <a href="#projects" class="px-8 py-4 glass-effect text-white font-semibold rounded-xl hover:bg-white/20 transition-all duration-300 btn-secondary">
+                    <i class="fas fa-arrow-down mr-2"></i>Learn More
+                </a>
+            </div>
         </div>
     </section>
 
+    <!-- Stats Section -->
+    <section class="py-16 slide-up">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="text-center glass-effect rounded-xl p-8">
+                <div class="text-4xl font-bold mb-2" style="color: #7A85C1;">3+</div>
+                <div class="text-white/80">AI Modules</div>
+            </div>
+            <div class="text-center glass-effect rounded-xl p-8">
+                <div class="text-4xl font-bold mb-2" style="color: #B2B0E8;">100%</div>
+                <div class="text-white/80">Open Source</div>
+            </div>
+            <div class="text-center glass-effect rounded-xl p-8">
+                <div class="text-4xl font-bold mb-2" style="color: #3B38A0;">24/7</div>
+                <div class="text-white/80">Available</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modules Section -->
+    <section id="projects" class="py-16">
+        <div class="text-center mb-16 slide-up">
+            <h2 class="text-4xl md:text-5xl font-bold mb-4 text-white">Explore My Projects</h2>
+            <p class="text-xl text-white/80 max-w-2xl mx-auto">
+                Discover cutting-edge AI applications built with modern technologies
+            </p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Gemini Chatbot -->
+            <div class="slide-up">
+                <a href="{% url 'chatbot' %}" class="block glass-effect p-8 rounded-2xl card-hover group">
+                    <div class="text-center mb-6">
+                        <div class="w-20 h-20 mx-auto mb-4 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300" style="background: linear-gradient(to bottom right, #3B38A0, #7A85C1);">
+                            <i class="fas fa-comments text-3xl text-white"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-white group-hover:text-opacity-80 transition-colors" style="color: #B2B0E8;">Gemini Chatbot</h3>
+                    <p class="text-white/70 mb-6 leading-relaxed">
+                        Chat with historical figures like Isaac Newton or Marie Curie using Google's Gemini AI. Experience conversations with the greatest minds in history.
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="px-3 py-1 rounded-full text-sm" style="background-color: rgba(59, 56, 160, 0.2); color: #7A85C1;">AI Chat</span>
+                        <span class="px-3 py-1 rounded-full text-sm" style="background-color: rgba(122, 133, 193, 0.2); color: #B2B0E8;">Voice Input</span>
+                        <span class="px-3 py-1 rounded-full text-sm" style="background-color: rgba(178, 176, 232, 0.2); color: #3B38A0;">TTS</span>
+                    </div>
+                    <div class="flex items-center justify-between text-white/60 group-hover:text-white/80 transition-colors">
+                        <span>Try it now</span>
+                        <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Voice Assistant -->
+            <div class="slide-up">
+                <a href="{% url 'assistant' %}" class="block glass-effect p-8 rounded-2xl card-hover group">
+                    <div class="text-center mb-6">
+                        <div class="w-20 h-20 mx-auto mb-4 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300" style="background: linear-gradient(to bottom right, #1A2A80, #3B38A0);">
+                            <i class="fas fa-microphone text-3xl text-white"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-white group-hover:text-opacity-80 transition-colors" style="color: #7A85C1;">Voice Assistant</h3>
+                    <p class="text-white/70 mb-6 leading-relaxed">
+                        Interact with Jarvis, a sophisticated voice-activated AI assistant powered by speech recognition and natural language processing.
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="px-3 py-1 rounded-full text-sm" style="background-color: rgba(26, 42, 128, 0.2); color: #7A85C1;">Voice Control</span>
+                        <span class="px-3 py-1 rounded-full text-sm" style="background-color: rgba(59, 56, 160, 0.2); color: #B2B0E8;">AI Assistant</span>
+                        <span class="px-3 py-1 rounded-full text-sm" style="background-color: rgba(122, 133, 193, 0.2); color: #3B38A0;">Real-time</span>
+                    </div>
+                    <div class="flex items-center justify-between text-white/60 group-hover:text-white/80 transition-colors">
+                        <span>Activate Jarvis</span>
+                        <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Eye Tracker -->
+            <div class="slide-up">
+                <a href="{% url 'tracker_page' %}" class="block glass-effect p-8 rounded-2xl card-hover group">
+                    <div class="text-center mb-6">
+                        <div class="w-20 h-20 mx-auto mb-4 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300" style="background: linear-gradient(to bottom right, #7A85C1, #B2B0E8);">
+                            <i class="fas fa-eye text-3xl text-white"></i>
+                        </div>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-white group-hover:text-opacity-80 transition-colors" style="color: #3B38A0;">Eye Tracker</h3>
+                    <p class="text-white/70 mb-6 leading-relaxed">
+                        Control your cursor with real-time eye tracking technology. Experience the future of human-computer interaction through computer vision.
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="px-3 py-1 rounded-full text-sm" style="background-color: rgba(178, 176, 232, 0.2); color: #1A2A80;">Eye Tracking</span>
+                        <span class="px-3 py-1 rounded-full text-sm" style="background-color: rgba(59, 56, 160, 0.2); color: #B2B0E8;">Computer Vision</span>
+                        <span class="px-3 py-1 rounded-full text-sm" style="background-color: rgba(26, 42, 128, 0.2); color: #7A85C1;">OpenCV</span>
+                    </div>
+                    <div class="flex items-center justify-between text-white/60 group-hover:text-white/80 transition-colors">
+                        <span>Start tracking</span>
+                        <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="py-20 text-center slide-up">
+        <div class="glass-effect rounded-2xl p-12">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4 text-white">Ready to Explore?</h2>
+            <p class="text-xl text-white/80 mb-8 max-w-2xl mx-auto">
+                Dive into the world of AI and discover what's possible with modern technology.
+            </p>
+            <a href="{% url 'chatbot' %}" class="inline-block px-8 py-4 text-white font-semibold rounded-xl transform hover:scale-105 transition-all duration-300 shadow-lg btn-primary">
+                <i class="fas fa-play mr-2"></i>Start Your Journey
+            </a>
+        </div>
+    </section>
 </div>
 {% endblock %}
