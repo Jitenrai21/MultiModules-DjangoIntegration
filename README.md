@@ -17,22 +17,6 @@
 
 ---
 
-## 📋 Table of Contents
-
-- [Overview](#overview)
-- [Features](#features)
-- [Demo](#demo)
-- [Technology Stack](#technology-stack)
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Usage](#usage)
-- [API Reference](#api-reference)
-- [Project Structure](#project-structure)
-- [Contributing](#contributing)
-- [License](#license)
-
----
-
 ## 🌟 Overview
 
 **JKR Modules Galore** is a sophisticated Django web application that integrates multiple AI-powered modules into a single, cohesive platform. The application features a modern glass-morphism UI design with a beautiful blue/purple color palette, providing users with an intuitive interface to interact with various AI technologies.
