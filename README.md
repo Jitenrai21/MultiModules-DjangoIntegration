@@ -1,4 +1,4 @@
-# 🚀 JKR Modules Galore - AI-Powered Multi-Module Application
+# JKR Modules Galore - AI-Powered Multi-Module Application
 
 <div align="center">
 
@@ -383,22 +383,6 @@ We welcome contributions to improve JKR Modules Galore! Here's how you can help:
 6. Push to the branch (`git push origin feature/amazing-feature`)
 7. Open a Pull Request
 
-### Development Guidelines
-- Follow PEP 8 for Python code
-- Use meaningful commit messages
-- Test all AI modules before submitting
-- Update documentation for new features
-- Ensure responsive design compatibility
-
-### Areas for Contribution
-- 🔧 **Performance Optimization**: Improve AI processing speed
-- 🎨 **UI Enhancements**: New themes and animations  
-- 🤖 **AI Features**: Additional chat personas or voice commands
-- 👁️ **Computer Vision**: Enhanced eye tracking accuracy
-- 📱 **Mobile Experience**: Improved mobile responsiveness
-- 🧪 **Testing**: Unit tests and integration tests
-- 📚 **Documentation**: Tutorials and API docs
-
 ---
 
 ## 🔒 Security Considerations
@@ -493,28 +477,6 @@ CORS_ALLOWED_ORIGINS = [
 
 ---
 
-## 📜 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-```
-MIT License
-
-Copyright (c) 2025 JKR Modules Galore
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-```
-
----
-
 ## 🙏 Acknowledgments
 
 ### Technologies & Libraries
@@ -531,15 +493,14 @@ copies or substantial portions of the Software.
 - Voice-controlled interfaces
 
 ### Contributors
-- **Jitenrai21** - Lead Developer & Project Creator
-- Community contributors and testers
+- **Jitenrai21** 
 
 ---
 
 ## 📞 Support & Contact
 
 ### Get Help
-- 📧 **Email**: [your-email@example.com](mailto:your-email@example.com)
+- 📧 **Email**: [info@jitenrai.com.np](mailto:info@jitenrai.com.np)
 - 💬 **GitHub Issues**: [Report a bug or request a feature](https://github.com/Jitenrai21/MultiModules-DjangoIntegration/issues)
 - 📖 **Documentation**: [Wiki & Guides](https://github.com/Jitenrai21/MultiModules-DjangoIntegration/wiki)
 
@@ -552,9 +513,9 @@ copies or substantial portions of the Software.
 
 <div align="center">
 
-**Made with ❤️ using Django and AI Technologies**
+**Made using Django and AI Technologies**
 
-*JKR Modules Galore - Where AI meets beautiful design*
+*JKR Modules Galore - Where AI is showcased*
 
 [⬆️ Back to Top](#-jkr-modules-galore---ai-powered-multi-module-application)
 
