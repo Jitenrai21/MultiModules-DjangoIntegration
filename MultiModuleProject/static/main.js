@@ -63,10 +63,55 @@ function sendFrameToBackend() {
     })
     .then(response => response.json())
     .then(data => {
-        // You can use gaze and wink info here to update UI or debug
+        // Handle wink detection feedback
+        if (data.wink) {
+            console.log('🎯 WINK DETECTED:', data.wink);
+            showWinkFeedback(data.wink);
+        }
+        
+        // Log all response data for debugging
         console.log('Backend response:', data);
     })
     .catch(err => {
         console.error('Error sending frame to backend:', err);
     });
+}
+
+// Function to show visual feedback when a wink is detected
+function showWinkFeedback(winkType) {
+    // Create or update wink indicator
+    let winkIndicator = document.getElementById('wink-feedback');
+    if (!winkIndicator) {
+        winkIndicator = document.createElement('div');
+        winkIndicator.id = 'wink-feedback';
+        winkIndicator.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #3B38A0, #7A85C1);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateX(100px);
+        `;
+        document.body.appendChild(winkIndicator);
+    }
+    
+    // Update content and show
+    winkIndicator.innerHTML = `
+        <i class="fas fa-eye${winkType === 'left' ? '-slash' : ''}"></i>
+        ${winkType.toUpperCase()} WINK DETECTED!
+    `;
+    winkIndicator.style.opacity = '1';
+    winkIndicator.style.transform = 'translateX(0)';
+    
+    // Hide after 2 seconds
+    setTimeout(() => {
+        winkIndicator.style.opacity = '0';
+        winkIndicator.style.transform = 'translateX(100px)';
+    }, 2000);
 }

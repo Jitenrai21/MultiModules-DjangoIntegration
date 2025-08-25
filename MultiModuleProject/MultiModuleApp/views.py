@@ -47,6 +47,19 @@ def tracker_page(request):
     """
     return render(request, 'MultiModuleApp/tracker.html')
 
+# Global instances to maintain state across requests
+wink_detector_instance = None
+
+def get_wink_detector():
+    global wink_detector_instance
+    if wink_detector_instance is None:
+        # More sensitive settings for better wink detection
+        wink_detector_instance = wink_detector.WinkDetector(
+            blink_threshold=0.25,  # Increased from 0.2 for easier detection
+            min_wink_duration=0.3  # Reduced from 1.0 seconds for faster response
+        )
+    return wink_detector_instance
+
 @csrf_exempt
 def process_frame(request):
     if request.method != 'POST':
@@ -87,11 +100,14 @@ def process_frame(request):
             cursor_instance.move_cursor_to_iris(iris_x_norm, iris_y_norm)
             response['gaze'] = gaze
             
-        wink_instance = wink_detector.WinkDetector()
+        wink_instance = get_wink_detector()
         wink = wink_instance.detect_wink(landmarks, frame_width, frame_height)
         if wink:
+            print(f"Wink detected: {wink}")  # Debug logging
             cursor_instance.click_if_wink(wink)
             response['wink'] = wink
+        else:
+            response['wink'] = None
 
     return JsonResponse(response)
 
