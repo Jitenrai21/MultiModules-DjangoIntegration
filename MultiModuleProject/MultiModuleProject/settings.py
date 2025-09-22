@@ -116,6 +116,31 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# Ollama LLM Configuration
+OLLAMA_BASE_URL = 'http://localhost:11434'
+OLLAMA_MODEL = 'llama3:latest'
+
+# LLM Service Configuration
+DEFAULT_LLM_PROVIDER = 'ollama'  # Can be 'ollama' or 'gemini'
+
+# Logging Configuration
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'MultiModuleApp.services.llm_service': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
 # Default primary key field type

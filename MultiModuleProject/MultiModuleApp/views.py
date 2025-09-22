@@ -13,11 +13,12 @@ import pyautogui
 import google.generativeai as genai
 import os
 from dotenv import load_dotenv
+from MultiModuleApp.services.llm_service import llm_service, LLMServiceError
 
 # Load environment variables
 load_dotenv()
 
-# Configure Gemini API
+# Configure Gemini API (kept for fallback)
 genai.configure(api_key=os.getenv('GOOGLE_API_KEY'))
 model = genai.GenerativeModel('gemini-1.5-flash')
 
@@ -49,6 +50,13 @@ def tracker_page(request):
 
 # Global instances to maintain state across requests
 wink_detector_instance = None
+face_detector_instance = None
+
+def get_face_detector():
+    global face_detector_instance
+    if face_detector_instance is None:
+        face_detector_instance = detector.FaceLandmarkDetector()
+    return face_detector_instance
 
 def get_wink_detector():
     global wink_detector_instance
@@ -67,49 +75,66 @@ def process_frame(request):
 
     try:
         data = json.loads(request.body)
-    except json.JSONDecodeError:
+        print("📸 Frame processing request received")
+    except json.JSONDecodeError as e:
+        print(f"❌ JSON decode error: {e}")
         return HttpResponseBadRequest('Invalid JSON')
 
     if 'image' not in data:
+        print("❌ No image in request data")
         return JsonResponse({'error': 'No image received'}, status=400)
 
-    image_data = data['image'].split(',')[1]
-    image_bytes = base64.b64decode(image_data)
-    np_arr = np.frombuffer(image_bytes, np.uint8)
-    frame = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
-    frame = cv2.flip(frame, 1)
+    try:
+        image_data = data['image'].split(',')[1]
+        image_bytes = base64.b64decode(image_data)
+        np_arr = np.frombuffer(image_bytes, np.uint8)
+        frame = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
+        frame = cv2.flip(frame, 1)
 
-    frame_height, frame_width = frame.shape[:2]
-    print(f'Height:{frame_height}, Width: {frame_width}')
+        frame_height, frame_width = frame.shape[:2]
+        print(f'📏 Frame dimensions - Height:{frame_height}, Width: {frame_width}')
 
-    face_landmark_detector_instance = detector.FaceLandmarkDetector()
-    landmarks = face_landmark_detector_instance.detect_landmarks(frame)
-    
-    response = {
-        'gaze': None,
-        'wink': None
-    }
-    SCREEN_WIDTH, SCREEN_HEIGHT = pyautogui.size()
-    cursor_instance = controller.CursorController(SCREEN_WIDTH, SCREEN_HEIGHT)
-    if landmarks:
-        gazeTrackerInstance = gaze_tracker.GazeTracker()
-        gaze, left_iris, right_iris = gazeTrackerInstance.estimate_gaze(landmarks, frame_width, frame_height)
-        if gaze and left_iris and right_iris:
-            iris_x_norm = (left_iris[0] + right_iris[0]) / 2 / frame_width
-            iris_y_norm = (left_iris[1] + right_iris[1]) / 2 / frame_height
-            cursor_instance.move_cursor_to_iris(iris_x_norm, iris_y_norm)
-            response['gaze'] = gaze
-            
-        wink_instance = get_wink_detector()
-        wink = wink_instance.detect_wink(landmarks, frame_width, frame_height)
-        if wink:
-            print(f"Wink detected: {wink}")  # Debug logging
-            cursor_instance.click_if_wink(wink)
-            response['wink'] = wink
+        face_landmark_detector_instance = get_face_detector()
+        landmarks = face_landmark_detector_instance.detect_landmarks(frame)
+        print(f"👤 Landmarks detected: {len(landmarks) if landmarks else 0}")
+        
+        response = {
+            'gaze': None,
+            'wink': None
+        }
+        SCREEN_WIDTH, SCREEN_HEIGHT = pyautogui.size()
+        cursor_instance = controller.CursorController(SCREEN_WIDTH, SCREEN_HEIGHT)
+        
+        if landmarks:
+            print("✅ Processing landmarks...")
+            gazeTrackerInstance = gaze_tracker.GazeTracker()
+            gaze, left_iris, right_iris = gazeTrackerInstance.estimate_gaze(landmarks, frame_width, frame_height)
+            if gaze and left_iris and right_iris:
+                iris_x_norm = (left_iris[0] + right_iris[0]) / 2 / frame_width
+                iris_y_norm = (left_iris[1] + right_iris[1]) / 2 / frame_height
+                cursor_instance.move_cursor_to_iris(iris_x_norm, iris_y_norm)
+                response['gaze'] = gaze
+                print(f"👁️ Gaze processed: {gaze}")
+                
+            wink_instance = get_wink_detector()
+            wink = wink_instance.detect_wink(landmarks, frame_width, frame_height)
+            if wink:
+                print(f"😉 Wink detected: {wink}")  # Debug logging
+                cursor_instance.click_if_wink(wink)
+                response['wink'] = wink
+            else:
+                response['wink'] = None
         else:
-            response['wink'] = None
+            print("❌ No landmarks detected")
 
-    return JsonResponse(response)
+        print(f"🔄 Sending response: {response}")
+        return JsonResponse(response)
+        
+    except Exception as e:
+        print(f"💥 Error processing frame: {e}")
+        import traceback
+        traceback.print_exc()
+        return JsonResponse({'error': str(e)}, status=500)
 
 def voice_assistant_page(request):
     """
@@ -205,7 +230,7 @@ def chatbot(request):
 @csrf_exempt
 def chat(request):
     """
-    Handles chat requests, integrating with the Gemini API.
+    Handles chat requests, integrating with Ollama (primary) and Gemini (fallback).
     """
     if request.method != 'POST':
         return HttpResponseBadRequest('Invalid request method')
@@ -224,38 +249,72 @@ def chat(request):
     if persona not in persona_options:
         return JsonResponse({'error': 'Invalid persona'}, status=400)
 
+    # Initialize or update session
     if session_id not in chat_sessions:
         chat_sessions[session_id] = {
             "persona": persona,
-            "chat_history": [],
-            "gemini_chat_session": model.start_chat(history=[])
+            "chat_history": []
         }
 
+    # Reset session if persona changed
     if chat_sessions[session_id]["persona"] != persona:
         chat_sessions[session_id]["persona"] = persona
         chat_sessions[session_id]["chat_history"] = []
-        chat_sessions[session_id]["gemini_chat_session"] = model.start_chat(history=[])
+        # Clear LLM service session as well
+        llm_service.clear_session(session_id)
 
     print(f"Session ID: {session_id}")
     print(f"Chat History: {chat_sessions[session_id]['chat_history']}")
     print(f"Persona: {chat_sessions[session_id]['persona']}")
 
     try:
+        # Load prompt template
         with open('prompt_template.txt', 'r', encoding="utf-8") as file:
             prompt_template = file.read().strip()
     except FileNotFoundError:
         return JsonResponse({'error': 'Prompt template not found'}, status=500)
 
+    # Build the persona-specific prompt
     persona_instruction = prompt_template.format(
         persona_name=persona,
         persona_description=persona_options[persona]
     )
-    prompt = persona_instruction + "\n\nUser: " + message
+    
+    # Combine persona instruction with user message
+    full_prompt = persona_instruction + "\n\nUser: " + message
 
     try:
-        response = chat_sessions[session_id]["gemini_chat_session"].send_message(prompt)
+        # Use the new LLM service with session management
+        response_text = llm_service.generate_response(
+            prompt=full_prompt,
+            session_id=session_id,
+            temperature=0.7,
+            max_tokens=2000
+        )
+        
+        # Update chat history
         chat_sessions[session_id]["chat_history"].append(("User", message))
-        chat_sessions[session_id]["chat_history"].append((persona, response.text))
-        return JsonResponse({'response': response.text})
+        chat_sessions[session_id]["chat_history"].append((persona, response_text))
+        
+        # Get provider status for debugging
+        provider_status = llm_service.get_provider_status()
+        print(f"LLM Provider Status: {provider_status}")
+        
+        return JsonResponse({
+            'response': response_text,
+            'provider_info': {
+                'providers': provider_status,
+                'primary': 'ollama'
+            }
+        })
+        
+    except LLMServiceError as e:
+        # Log the error and return user-friendly message
+        print(f"LLM Service Error: {str(e)}")
+        return JsonResponse({
+            'error': f'AI service temporarily unavailable: {str(e)}',
+            'provider_info': llm_service.get_provider_status()
+        }, status=503)
     except Exception as e:
-        return JsonResponse({'error': f'Error: {str(e)}'}, status=500)
+        print(f"Unexpected error in chat: {str(e)}")
+        return JsonResponse({'error': f'Unexpected error: {str(e)}'}, status=500)
