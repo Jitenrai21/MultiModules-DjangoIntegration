@@ -318,3 +318,43 @@ def chat(request):
     except Exception as e:
         print(f"Unexpected error in chat: {str(e)}")
         return JsonResponse({'error': f'Unexpected error: {str(e)}'}, status=500)
+
+@csrf_exempt
+def health_check(request):
+    """
+    Health check endpoint for monitoring and load balancers
+    """
+    try:
+        # Check LLM service status
+        provider_status = llm_service.get_provider_status()
+        
+        # Basic health info
+        health_data = {
+            'status': 'healthy',
+            'timestamp': datetime.datetime.now().isoformat(),
+            'providers': provider_status,
+            'services': {
+                'django': True,
+                'ollama': provider_status.get('ollama', {}).get('available', False),
+                'gemini_fallback': provider_status.get('gemini', {}).get('available', False)
+            }
+        }
+        
+        # Determine overall health
+        if provider_status.get('ollama', {}).get('available', False):
+            health_data['primary_llm'] = 'ollama'
+        elif provider_status.get('gemini', {}).get('available', False):
+            health_data['primary_llm'] = 'gemini'
+        else:
+            health_data['status'] = 'degraded'
+            health_data['primary_llm'] = 'none'
+        
+        status_code = 200 if health_data['status'] == 'healthy' else 503
+        return JsonResponse(health_data, status=status_code)
+        
+    except Exception as e:
+        return JsonResponse({
+            'status': 'unhealthy',
+            'error': str(e),
+            'timestamp': datetime.datetime.now().isoformat()
+        }, status=503)

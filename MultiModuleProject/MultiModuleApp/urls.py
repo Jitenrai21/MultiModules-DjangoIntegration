@@ -10,4 +10,5 @@ urlpatterns = [
     path('process_command/', views.process_command, name='process_command'),
     path('chatbot/', views.chatbot, name='chatbot'),
     path('chat/', views.chat, name='chat'),
+    path('health/', views.health_check, name='health_check'),
 ]
